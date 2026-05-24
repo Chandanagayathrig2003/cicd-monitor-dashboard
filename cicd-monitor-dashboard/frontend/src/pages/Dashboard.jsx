@@ -6,7 +6,7 @@ function Dashboard() {
 
   useEffect(() => {
     axios
-      .get('http://localhost:5000/api/deployments')
+      axios.get(`${import.meta.env.VITE_API_URL}/deployments`)
       .then((res) => setDeployments(res.data));
   }, []);
 
