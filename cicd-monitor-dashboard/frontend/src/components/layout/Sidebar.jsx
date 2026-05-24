@@ -6,7 +6,11 @@ import {
   ServerCrash
 } from 'lucide-react';
 
+import { Link, useLocation } from 'react-router-dom';
+
 function Sidebar() {
+  const location = useLocation();
+
   return (
     <div
       className="
@@ -23,7 +27,9 @@ function Sidebar() {
         top-0
       "
     >
+      {/* Logo */}
       <div className="flex items-center gap-4 mb-16">
+
         <div
           className="
             bg-gradient-to-r
@@ -31,7 +37,6 @@ function Sidebar() {
             to-purple-600
             p-3
             rounded-2xl
-            shadow-xl
           "
         >
           <ServerCrash size={30} />
@@ -42,68 +47,85 @@ function Sidebar() {
             DevOps Monitor
           </h1>
 
-          <p className="text-gray-400 text-sm mt-1">
+          <p className="text-gray-400 text-sm">
             Enterprise Platform
           </p>
         </div>
       </div>
 
+      {/* Nav */}
       <div className="space-y-5">
 
         <SidebarItem
+          to="/"
           icon={<LayoutDashboard />}
           label="Dashboard"
-          active
+          active={location.pathname === '/'}
         />
 
         <SidebarItem
+          to="/deployments"
           icon={<Activity />}
           label="Deployments"
+          active={
+            location.pathname === '/deployments'
+          }
         />
 
         <SidebarItem
+          to="/analytics"
           icon={<BarChart3 />}
           label="Analytics"
+          active={
+            location.pathname === '/analytics'
+          }
         />
 
         <SidebarItem
+          to="/settings"
           icon={<Settings />}
           label="Settings"
+          active={
+            location.pathname === '/settings'
+          }
         />
+
       </div>
     </div>
   );
 }
 
 function SidebarItem({
+  to,
   icon,
   label,
   active
 }) {
   return (
-    <div
-      className={`
-        flex
-        items-center
-        gap-4
-        px-5
-        py-4
-        rounded-2xl
-        cursor-pointer
-        transition-all
-        ${
-          active
-            ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-white border border-blue-500/20'
-            : 'text-gray-400 hover:text-white hover:bg-white/5'
-        }
-      `}
-    >
-      {icon}
+    <Link to={to}>
+      <div
+        className={`
+          flex
+          items-center
+          gap-4
+          px-5
+          py-4
+          rounded-2xl
+          transition-all
+          ${
+            active
+              ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/20 text-white'
+              : 'text-gray-400 hover:text-white hover:bg-white/5'
+          }
+        `}
+      >
+        {icon}
 
-      <span className="font-medium">
-        {label}
-      </span>
-    </div>
+        <span className="font-medium">
+          {label}
+        </span>
+      </div>
+    </Link>
   );
 }
 
