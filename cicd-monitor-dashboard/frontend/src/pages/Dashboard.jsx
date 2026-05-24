@@ -9,13 +9,6 @@ function Dashboard() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
 
-  const fetchDeployments = () => {
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/deployments`)
-      .then((res) => setDeployments(res.data))
-      .catch((err) => console.error(err));
-  };
-
   useEffect(() => {
     fetchDeployments();
 
@@ -37,6 +30,18 @@ function Dashboard() {
     };
   }, []);
 
+  const fetchDeployments = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/deployments`
+      );
+
+      setDeployments(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const filteredDeployments = deployments.filter((deployment) => {
     const matchesSearch = deployment.projectName
       .toLowerCase()
@@ -55,18 +60,17 @@ function Dashboard() {
         `${import.meta.env.VITE_API_URL}/deployments/${id}/retry`
       );
 
-      alert('Deployment restarted');
-
       fetchDeployments();
+
+      alert('Deployment restarted');
     } catch (error) {
       console.error(error);
-      alert('Retry failed');
     }
   };
 
   return (
     <div className="min-h-screen bg-black text-white p-8">
-      <h1 className="text-4xl font-bold mb-8">
+      <h1 className="text-5xl font-bold mb-8">
         CI/CD Deployment Dashboard
       </h1>
 
@@ -77,13 +81,13 @@ function Dashboard() {
           placeholder="Search project..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="bg-gray-800 text-white px-4 py-2 rounded-lg outline-none"
+          className="bg-gray-800 px-4 py-2 rounded-lg"
         />
 
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="bg-gray-800 text-white px-4 py-2 rounded-lg outline-none"
+          className="bg-gray-800 px-4 py-2 rounded-lg"
         >
           <option value="ALL">All</option>
           <option value="RUNNING">Running</option>
@@ -97,9 +101,9 @@ function Dashboard() {
         {filteredDeployments.map((deployment) => (
           <div
             key={deployment.id}
-            className="bg-gray-900 p-6 rounded-2xl shadow-lg border border-gray-800"
+            className="bg-gray-900 p-6 rounded-2xl border border-gray-700"
           >
-            <h2 className="text-2xl font-semibold mb-4">
+            <h2 className="text-2xl font-bold mb-3">
               {deployment.projectName}
             </h2>
 
@@ -121,7 +125,7 @@ function Dashboard() {
 
             <button
               onClick={() => retryDeployment(deployment.id)}
-              className="mt-5 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition"
+              className="mt-5 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg"
             >
               Retry Deployment
             </button>
@@ -129,13 +133,13 @@ function Dashboard() {
         ))}
       </div>
 
-      {/* Logs Viewer */}
-      <div className="bg-gray-900 p-6 rounded-2xl mt-10 border border-gray-800">
+      {/* Logs */}
+      <div className="bg-gray-900 p-6 rounded-2xl mt-10">
         <h2 className="text-2xl font-bold mb-4">
           Deployment Logs
         </h2>
 
-        <div className="bg-black text-green-400 p-4 rounded-lg font-mono text-sm space-y-2">
+        <div className="bg-black text-green-400 p-4 rounded-lg font-mono">
           <p>[10:02:01] Build Started</p>
           <p>[10:02:08] Running Tests</p>
           <p>[10:02:15] Deployment Successful</p>
