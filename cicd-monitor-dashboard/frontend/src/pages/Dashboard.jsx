@@ -6,6 +6,8 @@ import MetricsCard from '../components/dashboard/MetricsCard';
 import DeploymentCard from '../components/dashboard/DeploymentCard';
 import LogsPanel from '../components/dashboard/LogsPanel';
 import DeploymentPieChart from '../components/charts/DeploymentPieChart';
+import HeroSection from '../components/dashboard/HeroSection';
+import ActivityTimeline from '../components/dashboard/ActivityTimeline';
 
 function Dashboard() {
   const [deployments, setDeployments] =
@@ -97,6 +99,7 @@ function Dashboard() {
       <div className="flex-1 p-8 overflow-x-hidden">
 
         {/* Header */}
+        <HeroSection />
         <div className="mb-10">
           <h1 className="text-5xl font-bold">
             CI/CD Deployment Dashboard
@@ -190,6 +193,7 @@ function Dashboard() {
         <div className="grid grid-cols-1 2xl:grid-cols-2 gap-8 mt-10">
 
           {/* Chart */}
+          <ActivityTimeline />
           <div className="bg-[#111827] rounded-2xl p-6 border border-gray-800 shadow-xl">
             <DeploymentPieChart
               deployments={
