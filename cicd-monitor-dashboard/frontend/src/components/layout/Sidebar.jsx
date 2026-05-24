@@ -8,50 +8,101 @@ import {
 
 function Sidebar() {
   return (
-    <div className="hidden lg:flex flex-col w-72 bg-[#111827] border-r border-gray-800 min-h-screen p-8 sticky top-0">
+    <div
+      className="
+        hidden
+        lg:flex
+        flex-col
+        w-72
+        bg-black/30
+        backdrop-blur-xl
+        border-r border-white/10
+        min-h-screen
+        p-8
+        sticky
+        top-0
+      "
+    >
+      <div className="flex items-center gap-4 mb-16">
+        <div
+          className="
+            bg-gradient-to-r
+            from-blue-500
+            to-purple-600
+            p-3
+            rounded-2xl
+            shadow-xl
+          "
+        >
+          <ServerCrash size={30} />
+        </div>
 
-      <div className="flex items-center gap-3 mb-14">
-        <ServerCrash
-          className="text-blue-500"
-          size={34}
+        <div>
+          <h1 className="text-3xl font-bold">
+            DevOps Monitor
+          </h1>
+
+          <p className="text-gray-400 text-sm mt-1">
+            Enterprise Platform
+          </p>
+        </div>
+      </div>
+
+      <div className="space-y-5">
+
+        <SidebarItem
+          icon={<LayoutDashboard />}
+          label="Dashboard"
+          active
         />
 
-        <h1 className="text-3xl font-bold text-white">
-          DevOps Monitor
-        </h1>
+        <SidebarItem
+          icon={<Activity />}
+          label="Deployments"
+        />
+
+        <SidebarItem
+          icon={<BarChart3 />}
+          label="Analytics"
+        />
+
+        <SidebarItem
+          icon={<Settings />}
+          label="Settings"
+        />
       </div>
+    </div>
+  );
+}
 
-      <div className="space-y-4">
+function SidebarItem({
+  icon,
+  label,
+  active
+}) {
+  return (
+    <div
+      className={`
+        flex
+        items-center
+        gap-4
+        px-5
+        py-4
+        rounded-2xl
+        cursor-pointer
+        transition-all
+        ${
+          active
+            ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-white border border-blue-500/20'
+            : 'text-gray-400 hover:text-white hover:bg-white/5'
+        }
+      `}
+    >
+      {icon}
 
-        <div className="flex items-center gap-4 bg-blue-500/20 text-blue-400 px-5 py-4 rounded-xl cursor-pointer">
-          <LayoutDashboard size={22} />
-          <span className="font-medium">
-            Dashboard
-          </span>
-        </div>
-
-        <div className="flex items-center gap-4 text-gray-400 hover:text-white hover:bg-gray-800 px-5 py-4 rounded-xl cursor-pointer transition">
-          <Activity size={22} />
-          <span>
-            Deployments
-          </span>
-        </div>
-
-        <div className="flex items-center gap-4 text-gray-400 hover:text-white hover:bg-gray-800 px-5 py-4 rounded-xl cursor-pointer transition">
-          <BarChart3 size={22} />
-          <span>
-            Analytics
-          </span>
-        </div>
-
-        <div className="flex items-center gap-4 text-gray-400 hover:text-white hover:bg-gray-800 px-5 py-4 rounded-xl cursor-pointer transition">
-          <Settings size={22} />
-          <span>
-            Settings
-          </span>
-        </div>
-
-      </div>
+      <span className="font-medium">
+        {label}
+      </span>
     </div>
   );
 }
