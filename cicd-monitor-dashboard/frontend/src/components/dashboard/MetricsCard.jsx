@@ -7,18 +7,44 @@ function MetricsCard({
 }) {
   return (
     <motion.div
-      whileHover={{ scale: 1.03 }}
-      className="bg-[#111827] p-6 rounded-2xl border border-gray-800 shadow-xl"
+      whileHover={{
+        scale: 1.03
+      }}
+      className="
+        bg-white/5
+        backdrop-blur-xl
+        border border-white/10
+        rounded-3xl
+        p-7
+        shadow-2xl
+        relative
+        overflow-hidden
+      "
     >
-      <h2 className="text-gray-400 text-sm">
-        {title}
-      </h2>
+      {/* Glow */}
+      <div
+        className="
+          absolute
+          top-0
+          right-0
+          w-40
+          h-40
+          bg-blue-500/10
+          blur-3xl
+        "
+      />
 
-      <p
-        className={`text-4xl font-bold mt-3 ${color}`}
-      >
-        {value}
-      </p>
+      <div className="relative z-10">
+        <p className="text-gray-400 text-sm uppercase tracking-wider">
+          {title}
+        </p>
+
+        <h2
+          className={`text-5xl font-bold mt-5 ${color}`}
+        >
+          {value}
+        </h2>
+      </div>
     </motion.div>
   );
 }
