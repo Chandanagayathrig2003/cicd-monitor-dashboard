@@ -10,15 +10,24 @@ function DeploymentCard({
         scale: 1.02,
         y: -5
       }}
-      className="bg-[#111827] p-6 rounded-2xl border border-gray-800 shadow-lg"
+      className="bg-[#111827] border border-gray-800 rounded-2xl p-7 shadow-xl"
     >
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-white">
-          {deployment.projectName}
-        </h2>
 
-        <span
-          className={`px-3 py-1 rounded-full text-sm font-bold ${
+        <div>
+          <h2 className="text-2xl font-bold">
+            {deployment.projectName}
+          </h2>
+
+          <p className="text-gray-400 mt-2">
+            Environment:
+            {' '}
+            {deployment.environment}
+          </p>
+        </div>
+
+        <div
+          className={`px-4 py-2 rounded-full text-sm font-bold ${
             deployment.status === 'RUNNING'
               ? 'bg-yellow-500/20 text-yellow-400'
               : deployment.status === 'SUCCESS'
@@ -27,21 +36,33 @@ function DeploymentCard({
           }`}
         >
           {deployment.status}
-        </span>
+        </div>
       </div>
 
-      <p className="text-gray-400 mt-4">
-        Environment: {deployment.environment}
-      </p>
+      <div className="mt-8 flex justify-between items-center">
 
-      <button
-        onClick={() =>
-          retryDeployment(deployment.id)
-        }
-        className="mt-6 bg-blue-600 hover:bg-blue-700 transition px-4 py-2 rounded-lg"
-      >
-        Retry Deployment
-      </button>
+        <div>
+          <p className="text-gray-500 text-sm">
+            Pipeline Duration
+          </p>
+
+          <p className="text-lg font-semibold mt-1">
+            4m 23s
+          </p>
+        </div>
+
+        <button
+          onClick={() =>
+            retryDeployment(
+              deployment.id
+            )
+          }
+          className="bg-blue-600 hover:bg-blue-700 transition px-5 py-3 rounded-xl font-medium"
+        >
+          Retry
+        </button>
+
+      </div>
     </motion.div>
   );
 }
