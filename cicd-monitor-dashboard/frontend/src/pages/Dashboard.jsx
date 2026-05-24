@@ -5,7 +5,6 @@ function Dashboard() {
   const [deployments, setDeployments] = useState([]);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
-
   // Fetch deployments
   const fetchDeployments = async () => {
     try {
@@ -36,8 +35,8 @@ function Dashboard() {
       .includes(search.toLowerCase());
 
     const matchesStatus =
-      statusFilter === 'ALL' ||
-      deployment.status === statusFilter;
+  statusFilter === 'ALL' ||
+  deployment.status.toUpperCase() === statusFilter.toUpperCase();
 
     return matchesSearch && matchesStatus;
   });
