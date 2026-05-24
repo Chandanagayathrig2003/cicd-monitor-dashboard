@@ -1,18 +1,27 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
+import Sidebar from '../components/layout/Sidebar';
+import MetricsCard from '../components/dashboard/MetricsCard';
+import DeploymentCard from '../components/dashboard/DeploymentCard';
+import LogsPanel from '../components/dashboard/LogsPanel';
+import DeploymentPieChart from '../components/charts/DeploymentPieChart';
+
 function Dashboard() {
-  const [deployments, setDeployments] = useState([]);
-  const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState('ALL');
-  // Fetch deployments
+  const [deployments, setDeployments] =
+    useState([]);
+
+  const [search, setSearch] =
+    useState('');
+
+  const [statusFilter, setStatusFilter] =
+    useState('ALL');
+
   const fetchDeployments = async () => {
     try {
       const res = await axios.get(
         `${import.meta.env.VITE_API_URL}/deployments`
       );
-
-      console.log(res.data);
 
       setDeployments(res.data);
     } catch (error) {
@@ -23,113 +32,156 @@ function Dashboard() {
   useEffect(() => {
     fetchDeployments();
 
-    // Auto refresh every 5 sec
-    const interval = setInterval(fetchDeployments, 5000);
+    const interval = setInterval(
+      fetchDeployments,
+      5000
+    );
 
     return () => clearInterval(interval);
   }, []);
 
-  const filteredDeployments = deployments.filter((deployment) => {
-    const matchesSearch = deployment.projectName
-      .toLowerCase()
-      .includes(search.toLowerCase());
+  const filteredDeployments =
+    deployments.filter((deployment) => {
+      const matchesSearch =
+        deployment.projectName
+          .toLowerCase()
+          .includes(
+            search.toLowerCase()
+          );
 
-    const matchesStatus =
-  statusFilter === 'ALL' ||
-  deployment.status.toUpperCase() === statusFilter.toUpperCase();
+      const matchesStatus =
+        statusFilter === 'ALL' ||
+        deployment.status === statusFilter;
 
-    return matchesSearch && matchesStatus;
-  });
-
-  const retryDeployment = async (id) => {
-    try {
-      await axios.put(
-        `${import.meta.env.VITE_API_URL}/deployments/${id}/retry`
+      return (
+        matchesSearch &&
+        matchesStatus
       );
+    });
 
-      fetchDeployments();
+  const retryDeployment =
+    async (id) => {
+      try {
+        await axios.put(
+          `${import.meta.env.VITE_API_URL}/deployments/${id}/retry`
+        );
 
-      alert('Deployment restarted');
-    } catch (error) {
-      console.error(error);
-    }
-  };
+        fetchDeployments();
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+  const successCount =
+    deployments.filter(
+      (d) => d.status === 'SUCCESS'
+    ).length;
+
+  const failedCount =
+    deployments.filter(
+      (d) => d.status === 'FAILED'
+    ).length;
+
+  const runningCount =
+    deployments.filter(
+      (d) => d.status === 'RUNNING'
+    ).length;
 
   return (
-    <div className="min-h-screen bg-black text-white p-8">
-      <h1 className="text-5xl font-bold mb-8">
-        CI/CD Deployment Dashboard
-      </h1>
+    <div className="flex bg-black min-h-screen text-white">
+      <Sidebar />
 
-      {/* Search + Filter */}
-      <div className="flex flex-col md:flex-row gap-4 mb-8">
-        <input
-          type="text"
-          placeholder="Search project..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="bg-gray-800 px-4 py-2 rounded-lg"
-        />
+      <div className="flex-1 p-8">
+        <h1 className="text-5xl font-bold mb-10">
+          CI/CD Deployment Dashboard
+        </h1>
 
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="bg-gray-800 px-4 py-2 rounded-lg"
-        >
-          <option value="ALL">All</option>
-          <option value="RUNNING">Running</option>
-          <option value="SUCCESS">Success</option>
-          <option value="FAILED">Failed</option>
-        </select>
-      </div>
+        {/* Metrics */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          <MetricsCard
+            title="Successful Deployments"
+            value={successCount}
+            color="text-green-400"
+          />
 
-      {/* Deployment Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredDeployments.map((deployment) => (
-          <div
-            key={deployment.id}
-            className="bg-gray-900 p-6 rounded-2xl border border-gray-700"
+          <MetricsCard
+            title="Failed Pipelines"
+            value={failedCount}
+            color="text-red-400"
+          />
+
+          <MetricsCard
+            title="Running Jobs"
+            value={runningCount}
+            color="text-yellow-400"
+          />
+        </div>
+
+        {/* Search */}
+        <div className="flex gap-4 mb-8">
+          <input
+            type="text"
+            placeholder="Search project..."
+            value={search}
+            onChange={(e) =>
+              setSearch(e.target.value)
+            }
+            className="bg-[#111827] border border-gray-700 px-4 py-3 rounded-lg w-72"
+          />
+
+          <select
+            value={statusFilter}
+            onChange={(e) =>
+              setStatusFilter(
+                e.target.value
+              )
+            }
+            className="bg-[#111827] border border-gray-700 px-4 py-3 rounded-lg"
           >
-            <h2 className="text-2xl font-bold mb-3">
-              {deployment.projectName}
-            </h2>
+            <option value="ALL">
+              All
+            </option>
 
-            <p className="text-gray-300">
-              Environment: {deployment.environment}
-            </p>
+            <option value="RUNNING">
+              Running
+            </option>
 
-            <p
-              className={`mt-3 font-bold text-lg ${
-                deployment.status === 'RUNNING'
-                  ? 'text-yellow-400'
-                  : deployment.status === 'SUCCESS'
-                  ? 'text-green-400'
-                  : 'text-red-400'
-              }`}
-            >
-              Status: {deployment.status}
-            </p>
+            <option value="SUCCESS">
+              Success
+            </option>
 
-            <button
-              onClick={() => retryDeployment(deployment.id)}
-              className="mt-5 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg"
-            >
-              Retry Deployment
-            </button>
-          </div>
-        ))}
-      </div>
+            <option value="FAILED">
+              Failed
+            </option>
+          </select>
+        </div>
 
-      {/* Logs */}
-      <div className="bg-gray-900 p-6 rounded-2xl mt-10">
-        <h2 className="text-2xl font-bold mb-4">
-          Deployment Logs
-        </h2>
+        {/* Deployment Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {filteredDeployments.map(
+            (deployment) => (
+              <DeploymentCard
+                key={deployment.id}
+                deployment={
+                  deployment
+                }
+                retryDeployment={
+                  retryDeployment
+                }
+              />
+            )
+          )}
+        </div>
 
-        <div className="bg-black text-green-400 p-4 rounded-lg font-mono">
-          <p>[10:02:01] Build Started</p>
-          <p>[10:02:08] Running Tests</p>
-          <p>[10:02:15] Deployment Successful</p>
+        {/* Charts + Logs */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-10">
+          <DeploymentPieChart
+            deployments={
+              deployments
+            }
+          />
+
+          <LogsPanel />
         </div>
       </div>
     </div>
