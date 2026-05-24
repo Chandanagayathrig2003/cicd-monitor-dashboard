@@ -2,36 +2,55 @@ import {
   LayoutDashboard,
   Activity,
   BarChart3,
-  Settings
+  Settings,
+  ServerCrash
 } from 'lucide-react';
 
 function Sidebar() {
   return (
-    <div className="w-64 bg-[#111827] border-r border-gray-800 min-h-screen p-6">
-      <h1 className="text-2xl font-bold text-white mb-10">
-        DevOps Monitor
-      </h1>
+    <div className="hidden lg:flex flex-col w-72 bg-[#111827] border-r border-gray-800 min-h-screen p-8 sticky top-0">
 
-      <div className="space-y-6">
-        <div className="flex items-center gap-3 text-blue-400 cursor-pointer">
-          <LayoutDashboard size={20} />
-          <span>Dashboard</span>
+      <div className="flex items-center gap-3 mb-14">
+        <ServerCrash
+          className="text-blue-500"
+          size={34}
+        />
+
+        <h1 className="text-3xl font-bold text-white">
+          DevOps Monitor
+        </h1>
+      </div>
+
+      <div className="space-y-4">
+
+        <div className="flex items-center gap-4 bg-blue-500/20 text-blue-400 px-5 py-4 rounded-xl cursor-pointer">
+          <LayoutDashboard size={22} />
+          <span className="font-medium">
+            Dashboard
+          </span>
         </div>
 
-        <div className="flex items-center gap-3 text-gray-400 hover:text-white cursor-pointer">
-          <Activity size={20} />
-          <span>Deployments</span>
+        <div className="flex items-center gap-4 text-gray-400 hover:text-white hover:bg-gray-800 px-5 py-4 rounded-xl cursor-pointer transition">
+          <Activity size={22} />
+          <span>
+            Deployments
+          </span>
         </div>
 
-        <div className="flex items-center gap-3 text-gray-400 hover:text-white cursor-pointer">
-          <BarChart3 size={20} />
-          <span>Analytics</span>
+        <div className="flex items-center gap-4 text-gray-400 hover:text-white hover:bg-gray-800 px-5 py-4 rounded-xl cursor-pointer transition">
+          <BarChart3 size={22} />
+          <span>
+            Analytics
+          </span>
         </div>
 
-        <div className="flex items-center gap-3 text-gray-400 hover:text-white cursor-pointer">
-          <Settings size={20} />
-          <span>Settings</span>
+        <div className="flex items-center gap-4 text-gray-400 hover:text-white hover:bg-gray-800 px-5 py-4 rounded-xl cursor-pointer transition">
+          <Settings size={22} />
+          <span>
+            Settings
+          </span>
         </div>
+
       </div>
     </div>
   );
