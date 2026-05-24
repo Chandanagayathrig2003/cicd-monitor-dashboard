@@ -1,46 +1,34 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { io } from 'socket.io-client';
-
-const socket = io(import.meta.env.VITE_SOCKET_URL);
 
 function Dashboard() {
   const [deployments, setDeployments] = useState([]);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
 
-  useEffect(() => {
-    fetchDeployments();
-
-    socket.on('deploymentUpdated', (updatedDeployment) => {
-      setDeployments((prevDeployments) =>
-        prevDeployments.map((deployment) =>
-          deployment.id === updatedDeployment.id
-            ? {
-                ...deployment,
-                status: updatedDeployment.status
-              }
-            : deployment
-        )
-      );
-    });
-
-    return () => {
-      socket.off('deploymentUpdated');
-    };
-  }, []);
-
+  // Fetch deployments
   const fetchDeployments = async () => {
     try {
       const res = await axios.get(
         `${import.meta.env.VITE_API_URL}/deployments`
       );
 
+      console.log(res.data);
+
       setDeployments(res.data);
     } catch (error) {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    fetchDeployments();
+
+    // Auto refresh every 5 sec
+    const interval = setInterval(fetchDeployments, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const filteredDeployments = deployments.filter((deployment) => {
     const matchesSearch = deployment.projectName
