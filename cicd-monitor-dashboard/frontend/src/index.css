@@ -7,8 +7,8 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: Inter, sans-serif;
-  background: #020617;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  background: #0B1120;
   overflow-x: hidden;
   color: white;
 }
@@ -16,6 +16,16 @@ body {
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+}
+
+/* Animation Delays */
+@layer utilities {
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
 }
 
 /* Animated gradient background */
@@ -29,11 +39,9 @@ body::before {
     rgba(59, 130, 246, 0.15),
     transparent 70%
   );
-
   top: -200px;
   left: -200px;
   z-index: -1;
-
   animation: floatBlob 12s infinite alternate;
 }
 
@@ -47,21 +55,17 @@ body::after {
     rgba(168, 85, 247, 0.15),
     transparent 70%
   );
-
   bottom: -200px;
   right: -200px;
   z-index: -1;
-
   animation: floatBlob2 14s infinite alternate;
 }
 
 /* Animations */
-
 @keyframes floatBlob {
   0% {
     transform: translate(0px, 0px);
   }
-
   100% {
     transform: translate(80px, 40px);
   }
@@ -71,20 +75,18 @@ body::after {
   0% {
     transform: translate(0px, 0px);
   }
-
   100% {
     transform: translate(-60px, -80px);
   }
 }
 
 /* Custom scrollbar */
-
 ::-webkit-scrollbar {
   width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #020617;
+  background: #0B1120;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -94,4 +96,16 @@ body::after {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #475569;
+}
+
+/* Glassmorphism */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Select styling */
+select {
+  background-image: none;
 }
