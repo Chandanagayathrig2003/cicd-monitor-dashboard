@@ -88,13 +88,24 @@ function Dashboard() {
     ).length;
 
   return (
-    <div className="flex bg-black min-h-screen text-white">
+    <div className="flex bg-[#0B1120] text-white min-h-screen">
+      
+      {/* Sidebar */}
       <Sidebar />
 
-      <div className="flex-1 p-8">
-        <h1 className="text-5xl font-bold mb-10">
-          CI/CD Deployment Dashboard
-        </h1>
+      {/* Main Content */}
+      <div className="flex-1 p-8 overflow-x-hidden">
+
+        {/* Header */}
+        <div className="mb-10">
+          <h1 className="text-5xl font-bold">
+            CI/CD Deployment Dashboard
+          </h1>
+
+          <p className="text-gray-400 mt-3 text-lg">
+            Real-time DevOps deployment monitoring platform
+          </p>
+        </div>
 
         {/* Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
@@ -117,16 +128,16 @@ function Dashboard() {
           />
         </div>
 
-        {/* Search */}
-        <div className="flex gap-4 mb-8">
+        {/* Filters */}
+        <div className="flex flex-col md:flex-row gap-4 mb-10">
           <input
             type="text"
-            placeholder="Search project..."
+            placeholder="Search deployment..."
             value={search}
             onChange={(e) =>
               setSearch(e.target.value)
             }
-            className="bg-[#111827] border border-gray-700 px-4 py-3 rounded-lg w-72"
+            className="bg-[#111827] border border-gray-700 px-5 py-3 rounded-xl w-full md:w-80 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
           <select
@@ -136,10 +147,10 @@ function Dashboard() {
                 e.target.value
               )
             }
-            className="bg-[#111827] border border-gray-700 px-4 py-3 rounded-lg"
+            className="bg-[#111827] border border-gray-700 px-5 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="ALL">
-              All
+              All Status
             </option>
 
             <option value="RUNNING">
@@ -157,7 +168,8 @@ function Dashboard() {
         </div>
 
         {/* Deployment Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+
           {filteredDeployments.map(
             (deployment) => (
               <DeploymentCard
@@ -171,17 +183,24 @@ function Dashboard() {
               />
             )
           )}
+
         </div>
 
-        {/* Charts + Logs */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-10">
-          <DeploymentPieChart
-            deployments={
-              deployments
-            }
-          />
+        {/* Bottom Section */}
+        <div className="grid grid-cols-1 2xl:grid-cols-2 gap-8 mt-10">
 
+          {/* Chart */}
+          <div className="bg-[#111827] rounded-2xl p-6 border border-gray-800 shadow-xl">
+            <DeploymentPieChart
+              deployments={
+                deployments
+              }
+            />
+          </div>
+
+          {/* Logs */}
           <LogsPanel />
+
         </div>
       </div>
     </div>
