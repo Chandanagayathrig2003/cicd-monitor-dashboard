@@ -1,25 +1,40 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { io } from 'socket.io-client';
+
+const socket = io(import.meta.env.VITE_SOCKET_URL);
 
 function Dashboard() {
   const [deployments, setDeployments] = useState([]);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
 
-  useEffect(() => {
-    const fetchDeployments = () => {
-      axios
-        .get(`${import.meta.env.VITE_API_URL}/deployments`)
-        .then((res) => setDeployments(res.data))
-        .catch((err) => console.error(err));
-    };
+  const fetchDeployments = () => {
+    axios
+      .get(`${import.meta.env.VITE_API_URL}/deployments`)
+      .then((res) => setDeployments(res.data))
+      .catch((err) => console.error(err));
+  };
 
+  useEffect(() => {
     fetchDeployments();
 
-    // Auto refresh every 5 seconds
-    const interval = setInterval(fetchDeployments, 5000);
+    socket.on('deploymentUpdated', (updatedDeployment) => {
+      setDeployments((prevDeployments) =>
+        prevDeployments.map((deployment) =>
+          deployment.id === updatedDeployment.id
+            ? {
+                ...deployment,
+                status: updatedDeployment.status
+              }
+            : deployment
+        )
+      );
+    });
 
-    return () => clearInterval(interval);
+    return () => {
+      socket.off('deploymentUpdated');
+    };
   }, []);
 
   const filteredDeployments = deployments.filter((deployment) => {
@@ -41,6 +56,8 @@ function Dashboard() {
       );
 
       alert('Deployment restarted');
+
+      fetchDeployments();
     } catch (error) {
       console.error(error);
       alert('Retry failed');
